@@ -1,5 +1,3 @@
-can you turn this into a really clean toggle Gui with a clean close button
-
 local ACRunning = false
 local ACRemovalInterval = 1 -- seconds between scans
 local LastScanTime = 0
