@@ -383,7 +383,6 @@ local function RemoveAntiCheats()
             return ("Operation completed: %d items processed"):format(deletedCount)
         end
         
-        return "No anti-cheat components found"
     end)
     
     if success then
