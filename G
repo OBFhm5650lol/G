@@ -95,8 +95,12 @@ local function DetectAntiCheatComponents()
         "protect", "shield", "guard", "ban", "kick", "report", "fairplay",
         "guard", "exploit", "fairfight", "nohacks", "aspect", "minerva",
         "citadel", "anti-cheat", "azure", "infinity", "roblox", "elizabeth",
-        "warden", "coda", "axon", "mef", "nullify", "byfron", "redfox", "unnamed anticheat",
-        "crystal anticheat", "redone", "ac", "anticheat"
+        "warden", "coda", "axon", "mef", "nullify", "byfron", "redfox",
+        "crystal anticheat", "redone", "ac", "anticheat", "game guard",
+        "hyperion", "rac", "anti", "opa", "undetected", "unnamed anticheat",
+        "untitled anticheat", "seeking", "identify", "id", "look", "1ac", "state",
+        "inspect", "examining", "surveying", "scrutinizing", "reviewing",
+        "browsing", "analyzing", "observing", "viewing", "assessing", "Tracking"
     }
     
     -- Check for specific AC names and components with optimized yielding
