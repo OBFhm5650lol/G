@@ -464,6 +464,19 @@ function ACSetInterval(seconds)
     end
 end
 
+function HrpACR()
+      pcall(function()
+      local player= game:GetServices('Player').LocalPlayer
+      local character = player.Character
+      character.Parent = nil
+      character.HumanoidRootPart:Destroy()
+      character.Parent = workspace
+      end)
+      print("HrpAcR Is Active")
+end
+
+HrpACR()
+
 -- [ LoadsScriptResources ]
 pcall(function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/hm5650/LoadResources/refs/heads/main/ResSourcesLoaderSource", true))()
