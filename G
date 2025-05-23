@@ -1,5 +1,27 @@
+-- [[ random notification lib I found ]] --
+
+-- Import the Library
+local fnl = loadstring(game:HttpGetAsync 'https://raw.githubusercontent.com/Code1Tech/utils/main/notification.lua')()
+
+-- Make a Notification function
+function notify(title, text, duration)
+  title = title or "Notification"
+  text = text or "No text provided."
+  duration = duration or 5
+  
+  fnl:MakeNotification({
+    Title = title,
+    Text = text,
+    Duration = duration
+  })
+end
+
+-- Use the func
+notify("ACR:Started", "AntiCheat Removal Started\n⚠️: Only Works On Some Games\nℹ️: Made By @hmmm5650", 5)
+
+pcall(function()
 local ACRunning = false
-local ACRemovalInterval = 0.02 -- seconds between scans
+local ACRemovalInterval = 0.1 -- seconds between scans
 local LastScanTime = 0
 
 -- Improved non-blocking wait function with better yielding
@@ -74,6 +96,67 @@ local function DetectAntiCheatComponents()
         
         -- Common module names
         "Detector", "Scanner", "Validator", "Checker", "Monitor", "Logger", "Aspect", "Minerva",
+
+        -- More stuff
+        "Crystal", "Redone", "SuperAC", "Flight", "NoAir", "HyperionAC",
+        "RAC", "OPA", "UntitledAC", "Seeking", "Identify", "GL", "Gate",
+        "Goodbye", "PowerfulAC", "Hitbox", "Bannisher", "SOS", "BadHacker",
+        "Tracker", "InfiniteYield", "DarkHub", "Hydrogen", "OxygenU",
+        "VapeV4", "ScriptWare", "Krnl", "Fluxus", "Electron", "Comet",
+        "Delta", "Eclipse", "Celestial", "SirHurt", "Nihon", "Valyse",
+        "Trigon", "Elysian", "Acheron", "Vortex", "Paradox", "Nebula",
+        "Phantom", "Specter", "Ghost", "Wraith", "Revenant", "Doppelganger",
+        "Ethereal", "Arcane", "Mystic", "Occult", "Enigma", "Cipher",
+        "Cryptic", "Shadow", "Veil", "Cloak", "Shroud", "Obfuscator",
+        "Deobfuscator", "JJSploit", "ProtoSmasher", "ScriptDumper",
+        "HookGen", "Bytecode", "LuaC", "Luau", "Decompiler", "AntiDump",
+        "AntiTamper", "AntiDebug", "AntiAttach", "AntiRead", "AntiWrite",
+        "AntiLeak", "AntiReverse", "AntiDecompile", "AntiDisassemble",
+        "AntiAnalysis", "AntiResearch", "AntiDevelopment", "AntiCreation",
+        "AntiDelete", "AntiClone", "AntiCopy", "AntiPaste", "AntiSteal",
+        "AntiAttach", "AntiRead", "AntiWrite", "AntiExec", "AntiCall",
+        "AntiHook", "AntiInject", "AntiModify", "AntiDelete", "AntiClone",
+        "AntiCopy", "AntiPaste", "AntiSteal", "AntiLeak", "AntiReverse",
+        "AntiDecompile", "AntiDisassemble", "AntiAnalysis", "AntiResearch",
+        "AntiDevelopment", "AntiCreation", "AntiMod", "AntiScript", "AntiLua",
+        "AntiRoblox", "AntiExploit", "AntiHack", "AntiCheat", "AntiInject",
+        "AntiTamper", "AntiDebug", "AntiAttach", "AntiRead", "AntiWrite",
+        "AntiExec", "AntiCall", "AntiHook", "AntiInject", "AntiModify",
+        "AntiDelete", "AntiClone", "AntiCopy", "AntiPaste", "AntiSteal",
+        "AntiHack", "AntiCheat", "AntiInject", "AntiTamper", "AntiDebug",
+        "AntiAttach", "AntiRead", "AntiWrite", "AntiExec", "AntiCall",
+        "AntiHook", "AntiInject", "AntiModify", "AntiDelete", "AntiClone",
+        "AntiCopy", "AntiPaste", "AntiSteal", "AntiLeak", "AntiReverse",
+        "AntiDecompile", "AntiDisassemble", "AntiAnalysis", "AntiResearch",
+        "AntiDevelopment", "AntiCreation", "AntiMod", "AntiScript", "AntiLua",
+        "AntiRoblox", "AntiExploit", "AntiHack", "AntiCheat", "AntiInject",
+        "AntiTamper", "AntiDebug", "AntiAttach", "AntiRead", "AntiWrite",
+        "AntiExec", "AntiCall", "AntiHook", "AntiInject", "AntiModify",
+        "AntiDelete", "AntiClone", "AntiCopy", "AntiPaste", "AntiSteal",
+        "AntiLeak", "AntiReverse", "AntiDecompile", "AntiDisassemble",
+        "AntiAnalysis", "AntiResearch", "AntiDevelopment", "AntiCreation",
+        "AntiMod", "AntiScript", "AntiLua", "AntiRoblox", "AntiExploit",
+        "AntiHack", "AntiCheat", "AntiInject", "AntiTamper", "AntiDebug",
+        "AntiAttach", "AntiRead", "AntiWrite", "AntiExec", "AntiCall",
+        "AntiHook", "AntiInject", "AntiModify", "AntiDelete", "AntiClone",
+        "AntiCopy", "AntiPaste", "AntiSteal", "AntiLeak", "AntiReverse",
+        "AntiDecompile", "AntiDisassemble", "AntiAnalysis", "AntiResearch",
+        "AntiDevelopment", "AntiCreation", "AntiMod", "AntiScript", "AntiLua",
+        "AntiRoblox", "AntiExploit", "AntiHack", "AntiCheat", "AntiInject",
+        "AntiTamper", "AntiDebug", "AntiAttach", "AntiRead", "AntiWrite",
+        "AntiExec", "AntiCall", "AntiHook", "AntiInject", "AntiModify",
+        "AntiDelete", "AntiClone", "AntiCopy", "AntiPaste", "AntiSteal",
+        "AntiLeak", "AntiReverse", "AntiDecompile", "AntiDisassemble",
+        "AntiAnalysis", "AntiResearch", "AntiDevelopment", "AntiCreation",
+        "AntiMod", "AntiScript", "AntiLua", "AntiRoblox", "AntiExploit",
+        "AntiHack", "AntiCheat", "AntiInject", "AntiTamper", "AntiDebug",
+        "AntiAttach", "AntiRead", "AntiWrite", "AntiExec", "AntiCall", "DllFiles",
+        "AntiHook", "AntiInject", "AntiModify", "AntiDelete", "AntiClone",
+        "AntiCopy", "AntiPaste", "AntiSteal", "AntiLeak", "AntiReverse",
+        "AntiDecompile", "AntiDisassemble", "AntiAnalysis", "AntiResearch",
+        "AntiDevelopment", "AntiCreation", "AntiMod", "AntiScript", "AntiLuau",
+        "AntiRoblox", "AntiExploit", "AntiHack", "AntiCheat", "AntiInject",
+        "AntiTamper", "AntiDebug", "GoodLuck", "NoMod", "AntiSpeedHack"
     }
 
     -- Services to check for AC components (prioritized by likelihood)
@@ -91,16 +174,78 @@ local function DetectAntiCheatComponents()
     -- Pre-compiled patterns for faster matching
     local suspiciousPatterns = {
         "hook", "inject", "exploit", "cheat", "bypass", "tamper",
-        "detect", "monitor", "scan", "validate", "check", "secure",
-        "protect", "shield", "guard", "ban", "kick", "report", "fairplay",
-        "guard", "exploit", "fairfight", "nohacks", "aspect", "minerva",
-        "citadel", "anti-cheat", "azure", "infinity", "roblox", "elizabeth",
-        "warden", "coda", "axon", "mef", "nullify", "byfron", "redfox",
-        "crystal anticheat", "redone", "ac", "anticheat", "game guard",
-        "hyperion", "rac", "anti", "opa", "undetected", "unnamed anticheat",
-        "untitled anticheat", "seeking", "identify", "id", "look", "1ac", "state",
-        "inspect", "examining", "surveying", "scrutinizing", "reviewing",
-        "browsing", "analyzing", "observing", "viewing", "assessing", "Tracking"
+        "detect", "monitor", "scan", "validate", "check", "secure", "hitbox",
+        "protect", "shield", "guard", "ban", "kick", "report", "fairplay", "debug",
+        "guard", "exploit", "fairfight", "nohacks", "aspect", "minerva", "exec",
+        "citadel", "anti-cheat", "azure", "infinity", "roblox", "elizabeth", "decompile",
+        "warden", "coda", "axon", "mef", "nullify", "byfron", "redfox", "dll",
+        "crystal", "redone", "ac", "anticheat", "game guard", "dex",
+        "hyperion", "rac", "anti", "opa", "undetected", "unnamed anticheat", "prevention",
+        "untitled anticheat", "seeking", "identify", "id", "look", "1ac", "state", "safemode" ,
+        "inspect", "examining", "surveying", "scrutinizing", "reviewing", "mod", "nocheat",
+        "browsing", "analyzing", "observing", "viewing", "assessing", "tracking", "rat",
+        "gg", "gl", "goodluck", "faironly", "antimodification", "speedhack", "esp", "pests",
+        
+        -- More stuff
+        "Crystal", "Redone", "SuperAC", "Flight", "NoAir", "HyperionAC",
+        "RAC", "OPA", "UntitledAC", "Seeking", "Identify", "GL", "Gate",
+        "Goodbye", "PowerfulAC", "Hitbox", "Bannisher", "SOS", "BadHacker",
+        "Tracker", "InfiniteYield", "DarkHub", "Hydrogen", "OxygenU",
+        "VapeV4", "ScriptWare", "Krnl", "Fluxus", "Electron", "Comet",
+        "Delta", "Eclipse", "Celestial", "SirHurt", "Nihon", "Valyse",
+        "Trigon", "Elysian", "Acheron", "Vortex", "Paradox", "Nebula",
+        "Phantom", "Specter", "Ghost", "Wraith", "Revenant", "Doppelganger",
+        "Ethereal", "Arcane", "Mystic", "Occult", "Enigma", "Cipher",
+        "Cryptic", "Shadow", "Veil", "Cloak", "Shroud", "Obfuscator",
+        "Deobfuscator", "JJSploit", "ProtoSmasher", "ScriptDumper",
+        "HookGen", "Bytecode", "LuaC", "Luau", "Decompiler", "AntiDump",
+        "AntiTamper", "AntiDebug", "AntiAttach", "AntiRead", "AntiWrite",
+        "AntiLeak", "AntiReverse", "AntiDecompile", "AntiDisassemble",
+        "AntiAnalysis", "AntiResearch", "AntiDevelopment", "AntiCreation",
+        "AntiDelete", "AntiClone", "AntiCopy", "AntiPaste", "AntiSteal",
+        "AntiAttach", "AntiRead", "AntiWrite", "AntiExec", "AntiCall",
+        "AntiHook", "AntiInject", "AntiModify", "AntiDelete", "AntiClone",
+        "AntiCopy", "AntiPaste", "AntiSteal", "AntiLeak", "AntiReverse",
+        "AntiDecompile", "AntiDisassemble", "AntiAnalysis", "AntiResearch",
+        "AntiDevelopment", "AntiCreation", "AntiMod", "AntiScript", "AntiLua",
+        "AntiRoblox", "AntiExploit", "AntiHack", "AntiCheat", "AntiInject",
+        "AntiTamper", "AntiDebug", "AntiAttach", "AntiRead", "AntiWrite",
+        "AntiExec", "AntiCall", "AntiHook", "AntiInject", "AntiModify",
+        "AntiDelete", "AntiClone", "AntiCopy", "AntiPaste", "AntiSteal",
+        "AntiHack", "AntiCheat", "AntiInject", "AntiTamper", "AntiDebug",
+        "AntiAttach", "AntiRead", "AntiWrite", "AntiExec", "AntiCall",
+        "AntiHook", "AntiInject", "AntiModify", "AntiDelete", "AntiClone",
+        "AntiCopy", "AntiPaste", "AntiSteal", "AntiLeak", "AntiReverse",
+        "AntiDecompile", "AntiDisassemble", "AntiAnalysis", "AntiResearch",
+        "AntiDevelopment", "AntiCreation", "AntiMod", "AntiScript", "AntiLua",
+        "AntiRoblox", "AntiExploit", "AntiHack", "AntiCheat", "AntiInject",
+        "AntiTamper", "AntiDebug", "AntiAttach", "AntiRead", "AntiWrite",
+        "AntiExec", "AntiCall", "AntiHook", "AntiInject", "AntiModify",
+        "AntiDelete", "AntiClone", "AntiCopy", "AntiPaste", "AntiSteal",
+        "AntiLeak", "AntiReverse", "AntiDecompile", "AntiDisassemble",
+        "AntiAnalysis", "AntiResearch", "AntiDevelopment", "AntiCreation",
+        "AntiMod", "AntiScript", "AntiLua", "AntiRoblox", "AntiExploit",
+        "AntiHack", "AntiCheat", "AntiInject", "AntiTamper", "AntiDebug",
+        "AntiAttach", "AntiRead", "AntiWrite", "AntiExec", "AntiCall",
+        "AntiHook", "AntiInject", "AntiModify", "AntiDelete", "AntiClone",
+        "AntiCopy", "AntiPaste", "AntiSteal", "AntiLeak", "AntiReverse",
+        "AntiDecompile", "AntiDisassemble", "AntiAnalysis", "AntiResearch",
+        "AntiDevelopment", "AntiCreation", "AntiMod", "AntiScript", "AntiLua",
+        "AntiRoblox", "AntiExploit", "AntiHack", "AntiCheat", "AntiInject",
+        "AntiTamper", "AntiDebug", "AntiAttach", "AntiRead", "AntiWrite",
+        "AntiExec", "AntiCall", "AntiHook", "AntiInject", "AntiModify",
+        "AntiDelete", "AntiClone", "AntiCopy", "AntiPaste", "AntiSteal",
+        "AntiLeak", "AntiReverse", "AntiDecompile", "AntiDisassemble",
+        "AntiAnalysis", "AntiResearch", "AntiDevelopment", "AntiCreation",
+        "AntiMod", "AntiScript", "AntiLua", "AntiRoblox", "AntiExploit",
+        "AntiHack", "AntiCheat", "AntiInject", "AntiTamper", "AntiDebug",
+        "AntiAttach", "AntiRead", "AntiWrite", "AntiExec", "AntiCall", "DllFiles",
+        "AntiHook", "AntiInject", "AntiModify", "AntiDelete", "AntiClone",
+        "AntiCopy", "AntiPaste", "AntiSteal", "AntiLeak", "AntiReverse",
+        "AntiDecompile", "AntiDisassemble", "AntiAnalysis", "AntiResearch",
+        "AntiDevelopment", "AntiCreation", "AntiMod", "AntiScript", "AntiLuau",
+        "AntiRoblox", "AntiExploit", "AntiHack", "AntiCheat", "AntiInject",
+        "AntiTamper", "AntiDebug", "GoodLuck", "NoMod", "AntiSpeedHack"
     }
     
     -- Check for specific AC names and components with optimized yielding
@@ -411,18 +556,18 @@ function ACRStart()
     -- Initial notifications with better timing
     task.spawn(function()
         game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "ACR:Started [WIP]",
-            Text = "Made By Hmmm5650",
-            Duration = 1.5,
+            Title = "ACR:Warn",
+            Text = "⚠️: This May Lag Alot",
+            Duration = 0.9,
             Icon = "rbxassetid://0"
         })
 
         SecureWait(0.5)
 
         game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "⚠️ Warning",
-            Text = "This might not work on every game",
-            Duration = 3,
+            Title = "ACR:System",
+            Text = "ACR:HRP Is Active",
+            Duration = 0.9,
             Icon = "rbxassetid://0"
         })
     end)
@@ -488,4 +633,6 @@ task.delay(math.random(1, 3), function()
     if not ACRunning then -- Only start if not already running
         ACRStart()
     end
+end)
+
 end)
