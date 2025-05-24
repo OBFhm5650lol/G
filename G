@@ -17,7 +17,7 @@ function notify(title, text, duration)
 end
 
 -- Use the func
-notify("ACR:Started", "AntiCheat Removal Started\n⚠️: Only Works On Some Games\nℹ️: Made By @hmmm5650", 5)
+notify("ACR:Started", "AntiCheat Removal Started\n⚠️: Only Works On Some Games\nℹ️: Made By @hmmm5650", 3.5)
 
 pcall(function()
 local ACRunning = false
